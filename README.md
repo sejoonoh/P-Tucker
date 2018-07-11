@@ -4,7 +4,7 @@ Overview
 ---------------
 
 **Scalable Tucker Factorization for Sparse Tensors - Algorithms and Discoveries (ICDE 2018)**  
-[Sejoon Oh*](https://www.sejoonoh.com/), [Namyong Park*](http://namyongpark.com/), [Lee Sael](https://leesael.github.io/), and [U Kang](https://datalab.snu.ac.kr/~ukang/)
+[Sejoon Oh](https://www.sejoonoh.com/), [Namyong Park](http://namyongpark.com/), [Lee Sael](https://leesael.github.io/), and [U Kang](https://datalab.snu.ac.kr/~ukang/)
 
 [[Paper](https://datalab.snu.ac.kr/ptucker/ptucker.pdf)] [[Supplementary Material](https://datalab.snu.ac.kr/ptucker/supple.pdf)]
 
@@ -34,7 +34,7 @@ To run the demo, please follow the following procedure. Sample tensor is created
 	1. Type "make demo"
 	2. Check "sample/result" directory for the demo factorization results
   
-Orthogonalization of factor matrices
+Orthogonalization of Factor Matrices
 ---------------
 
 You can apply QR decompositions to output factor matrices and core tensor according to the main paper using MATLAB or other languages. Notice that current version of P-Tucker does not orthogonalize factor matrices and update a core tensor.
