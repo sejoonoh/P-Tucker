@@ -25,7 +25,8 @@ If you put the command properly, P-Tucker will write all values of factor matric
 
 		ex) result/FACTOR1, result/CORETENSOR
 
-**We note that input tensors must follow base-1 indexing and outputs are based on base-0 indexing.**
+**We note that input tensors must follow base-1 indexing and tab- or space-separated format, and output tensors are based on base-0 indexing.**
+
 
 Demo
 ---------------
