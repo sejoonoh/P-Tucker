@@ -1,11 +1,11 @@
 /*
 * @file         P-Tucker.cpp
-* @main author  Sejoon Oh (ohhenrie@snu.ac.kr), Seoul National University
+* @main author  Sejoon Oh (sejun6431@gmail.com), Seoul National University
 * @author       Namyong Park (namyongp@cs.cmu.edu), Carnegie Mellon University
 * @author       Lee Sael (saellee@gmail.com), Seoul National University
 * @author       U Kang (ukang@snu.ac.kr), Seoul National University
-* @version      1.5
-* @date         2018-07-11
+* @version      1.6
+* @date         2019-04-24
 *
 * Scalable Tucker Factorization for Sparse Tensors - Algorithms and Discoveries (ICDE 2018)
 *
@@ -13,9 +13,10 @@
 * For commercial purposes, please contact the main author.
 *
 * Recent Updates:
-    - Eigen library is used instead of Armadillo for generality
+        - Eigen library is used instead of Armadillo for generality
 	- demo function is added (command: make demo)
-	- Fast input reading function is added
+	- Fast I/O function is added
+	- Some minor updates
 * Usage:
 *   - make P-Tucker
     - ./P-Tucker [input_tensor_path] [result_directory_path] [tensor_order] [tensor_rank] [number of threads]
@@ -35,7 +36,7 @@ using namespace std;
 using namespace Eigen;
 typedef Matrix<double, Dynamic, Dynamic> MatrixXdd; //Matrix format of Eigen library
 
-#define lambda 0.001
+#define lambda 0.001						// Default L2 regularization parameter
 ///////////////////////////////
 char* InputPath;
 char* ResultPath;
@@ -125,7 +126,7 @@ void assign_index() {
 		}
 	}
 }
-char tmp[1005];
+char tmp[10005];
 //[Input] Metadata + input tensor as a sparse tensor format 
 //[Output] Initialized core tensor G and factor matrices A^{(n)} (n=1...N)
 //[Function] Getting all information about an input tensor X / Initialize all factor matrices and core tensor.
@@ -148,14 +149,14 @@ void Getting_Input() {
 	}
 
 	int len = 0;
-	while (fgets(tmp, 1005, fin)) {
+	while (fgets(tmp, 10005, fin)) {
 		Entries_N++;
 	}
 	Indices = (int *)malloc(sizeof(int)*Entries_N*order);
 	Entries = (double *)malloc(sizeof(double)*Entries_N);
 	int pos = 0;
 	for (i = 0; i < Entries_N; i++) {
-		fgets(tmp, 1005, fin2);
+		fgets(tmp, 10005, fin2);
 		len = strlen(tmp);
 		int k = 0, idx = 0, flag = 0;
 		double mul = 0.1, val = 0;
@@ -426,7 +427,7 @@ void PTucker() {
 //[Function] Writing all factor matrices and core tensor in result path
 void Print() {
 	printf("\nWriting factor matrices and the core tensor...\n");
-	char temp[50];
+	char temp[10005];
 	int pos = 0;
 	int mult = max_dim*Core_dim;
 	for (i = 0; i < order; i++) {
