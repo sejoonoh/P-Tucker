@@ -4,7 +4,7 @@ Overview
 ---------------
 
 **Scalable Tucker Factorization for Sparse Tensors - Algorithms and Discoveries (ICDE 2018)**  
-[Sejoon Oh](https://www.sejoonoh.com/), [Namyong Park](http://namyongpark.com/), [Lee Sael](https://leesael.github.io/), and [U Kang](https://datalab.snu.ac.kr/~ukang/)
+[Sejoon Oh](https://sejoonoh.github.io/), [Namyong Park](http://namyongpark.com/), [Lee Sael](https://leesael.github.io/), and [U Kang](https://datalab.snu.ac.kr/~ukang/)
 
 [[Paper](https://datalab.snu.ac.kr/ptucker/ptucker.pdf)] [[Supplementary Material](https://datalab.snu.ac.kr/ptucker/supple.pdf)]
 
