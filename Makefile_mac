@@ -1,6 +1,6 @@
 CXX=g++
 
-OPT = -I lib -O2 -mcmodel=medium -fopenmp -w 
+OPT = -I lib -O2 -mcmodel=medium -Xpreprocessor  -fopenmp -lomp -w 
 
 CXXFLAGS = $(DEBUG) $(FINAL) $(OPT) $(EXTRA_OPT)
 
@@ -10,7 +10,7 @@ P-Tucker: P-Tucker.cpp
 	$(CXX) $(CXXFLAGS)  -o $@  $<
 
 demo: P-Tucker.cpp
-	g++ -I lib -o P-Tucker P-Tucker.cpp -O2 -fopenmp -w -mcmodel=medium
+	g++ -I lib -o P-Tucker P-Tucker.cpp -O2 -Xpreprocessor -fopenmp -lomp -w -mcmodel=medium
 	./P-Tucker sample/input.txt sample/result 3 10 20
 
 

@@ -13,7 +13,7 @@ Please refer to the following website for the details of P-Tucker (https://datal
 Usage
 ---------------
 
-**P-Tucker requires OpenMP 2.0 or above version! (if you use gcc/g++ compiler, it is installed by default)**
+**P-Tucker requires OpenMP 2.0 or above version! (if you use gcc/g++ compiler, it is installed by default, for macOS, see https://iscinumpy.gitlab.io/post/omp-on-high-sierra/ and replace Makefile with Makefile_mac)**
 
 "make" command will create a single executable file, which is "P-Tucker".
 
