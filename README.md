@@ -25,7 +25,7 @@ If you put the command properly, P-Tucker will write all values of factor matric
 
 		ex) result/FACTOR1, result/CORETENSOR
 
-**We note that input tensors must follow base-1 indexing and tab- or space-separated format, and output tensors are based on base-0 indexing.**
+**We note that input and output tensors are based on base-0 indexing, and tab- or space-separated input tensors are allowed.**
 
 
 Demo
@@ -43,7 +43,7 @@ You can apply QR decompositions to output factor matrices and core tensor accord
 P-Tucker-Cache and P-Tucker-APPROX 
 ---------------
 
-If you want to run P-Tucker-Cache or P-Tucker-APPROX, please contact the main author (Sejoon Oh, ohhenrie@snu.ac.kr).
+If you want to run P-Tucker-Cache or P-Tucker-APPROX, please contact the main author (Sejoon Oh, sejun6431@gmail.com).
 
 Tested Environment
 ---------------

@@ -1,11 +1,11 @@
 /*
 * @file         P-Tucker.cpp
-* @main author  Sejoon Oh (sejun6431@gmail.com), Seoul National University
+* @main author  Sejoon Oh (sejun6431@gmail.com), Georgia Institute of Technology
 * @author       Namyong Park (namyongp@cs.cmu.edu), Carnegie Mellon University
 * @author       Lee Sael (saellee@gmail.com), Seoul National University
 * @author       U Kang (ukang@snu.ac.kr), Seoul National University
-* @version      1.6
-* @date         2019-04-24
+* @version      1.7
+* @date         2019-05-22
 *
 * Scalable Tucker Factorization for Sparse Tensors - Algorithms and Discoveries (ICDE 2018)
 *
@@ -13,10 +13,9 @@
 * For commercial purposes, please contact the main author.
 *
 * Recent Updates:
-        - Eigen library is used instead of Armadillo for generality
+	- base-1 indexing is not used anymore & output format is improved
+	- Eigen library is used instead of Armadillo for generality
 	- demo function is added (command: make demo)
-	- Fast I/O function is added
-	- Some minor updates
 * Usage:
 *   - make P-Tucker
     - ./P-Tucker [input_tensor_path] [result_directory_path] [tensor_order] [tensor_rank] [number of threads]
@@ -162,8 +161,8 @@ void Getting_Input() {
 		double mul = 0.1, val = 0;
 		for (j = 0; j < len; j++) {
 			if (tmp[j] == ' ' || tmp[j] == '\t') {
-				Indices[pos++] = idx - 1;
-				if (dimensionality[k] < idx) dimensionality[k] = idx;
+				Indices[pos++] = idx;
+				if (dimensionality[k] < idx+1) dimensionality[k] = idx+1;
 				idx = 0;
 				k++;
 			}
@@ -411,7 +410,7 @@ void PTucker() {
 		avertime += omp_get_wtime() - itertime;
 		printf("Fit:\t%lf\nTraining RMSE:\t%lf\nElapsed Time:\t%lf\n\n", Fit, RMSE, omp_get_wtime() - itertime);
 
-		if (pFit != -1 && abss(pFit - Fit) <= 0.001) break;
+		if (iter>=20 || (pFit != -1 && abss(pFit - Fit) <= 0.0001)) break;
 		pFit = Fit;
 	}
 
@@ -435,7 +434,8 @@ void Print() {
 		FILE *fin = fopen(temp, "w");
 		for (j = 0; j < dimensionality[i]; j++) {
 			for (k = 0; k < Core_size[i]; k++) {
-				fprintf(fin, "%e\t", FactorM[i*mult + j*Core_size[i] + k]);
+				if(k==Core_size[i]-1) fprintf(fin, "%e", FactorM[i*mult + j*Core_size[i] + k]);
+				else fprintf(fin, "%e\t", FactorM[i*mult + j*Core_size[i] + k]);
 			}
 			fprintf(fin, "\n");
 		}
@@ -445,7 +445,8 @@ void Print() {
 	pos = 0;
 	for (i = 0; i < Core_N; i++) {
 		for (j = 0; j < order; j++) {
-			fprintf(fcore, "%d\t", CorePermu[pos++]);
+			if(j==order-1) fprintf(fcore, "%d", CorePermu[pos++]);
+			else fprintf(fcore, "%d\t", CorePermu[pos++]);
 		}
 		fprintf(fcore, "%e\n", CoreTensor[i]);
 	}
