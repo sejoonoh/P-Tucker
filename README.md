@@ -35,15 +35,19 @@ To run the demo, please follow the following procedure. Sample tensor is created
 	1. Type "make demo"
 	2. Check "sample/result" directory for the demo factorization results
   
+  
 Orthogonalization of Factor Matrices
 ---------------
 
-You can apply QR decompositions to output factor matrices and core tensor according to the main paper using MATLAB or other languages. Notice that current version of P-Tucker does not orthogonalize factor matrices and update a core tensor.
+Orthogonalization of factor matrices and updating a core tensor are included in the source code (**disabled by default**).
+Please uncomment them (lines 471-472) before you run the code (if you wish to perform orthogonalization).
+
 
 P-Tucker-Cache and P-Tucker-APPROX 
 ---------------
 
 If you want to run P-Tucker-Cache or P-Tucker-APPROX, please contact the main author (Sejoon Oh, sejun6431@gmail.com).
+
 
 Tested Environment
 ---------------

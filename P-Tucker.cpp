@@ -4,8 +4,8 @@
 * @author       Namyong Park (namyongp@cs.cmu.edu), Carnegie Mellon University
 * @author       Lee Sael (saellee@gmail.com), Seoul National University
 * @author       U Kang (ukang@snu.ac.kr), Seoul National University
-* @version      1.7
-* @date         2019-05-22
+* @version      1.8
+* @date         2019-06-07
 *
 * Scalable Tucker Factorization for Sparse Tensors - Algorithms and Discoveries (ICDE 2018)
 *
@@ -13,9 +13,9 @@
 * For commercial purposes, please contact the main author.
 *
 * Recent Updates:
+	- Orthogonalizing factor matrices & updating core tensor have been added (default: off); uncomment Orthogonalize() if you want to use it.
 	- base-1 indexing is not used anymore & output format is improved
 	- Eigen library is used instead of Armadillo for generality
-	- demo function is added (command: make demo)
 * Usage:
 *   - make P-Tucker
     - ./P-Tucker [input_tensor_path] [result_directory_path] [tensor_order] [tensor_rank] [number of threads]
@@ -29,6 +29,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
+#include <Eigen/QR>
 #include <Eigen/Dense>
 #include <omp.h>
 using namespace std;
@@ -381,6 +382,56 @@ void Reconstruction() {
 	free(Error_T);
 }
 
+//[Input] Updated factor matrices A^{(n)} (n=1...N)
+//[Output] Orthonormal factor matrices A^{(n)} (n=1...N) and updated core tensor G
+//[Function] Orthogonalize all factor matrices and update core tensor simultaneously.
+void Orthogonalize() {
+	Mul = (int *)malloc(sizeof(int)*order);
+	Mul[order - 1] = 1;
+	for (i = order - 2; i >= 0; i--) {
+		Mul[i] = Mul[i + 1] * Core_size[i + 1];
+	}
+	int pos = 0;
+	for (i = 0; i < order; i++) {
+        MatrixXdd X(dimensionality[i], Core_size[i]), thinQ(MatrixXdd::Identity(dimensionality[i], Core_size[i]));
+		for (k = 0; k < dimensionality[i]; k++) {
+			for (l = 0; l < Core_size[i]; l++) {
+				X(k, l) = FactorM[i*max_dim*Core_dim + k*Core_dim + l];
+			}
+		}
+        HouseholderQR<MatrixXdd> qr(X);
+        thinQ = qr.householderQ() * thinQ;
+        
+		for (k = 0; k < dimensionality[i]; k++) {
+			for (l = 0; l < Core_size[i]; l++) {
+				FactorM[i*max_dim*Core_dim + k*Core_dim + l] = thinQ(k, l);
+			}
+		}
+        
+        MatrixXdd R = thinQ.transpose()*X;
+        tempCore = (double *)malloc(sizeof(double)*Core_N);
+		tempPermu = (int *)malloc(sizeof(int)*order);
+		for (j = 0; j < Core_N; j++) {
+			tempCore[j] = 0;
+		}
+		for (j = 0; j < Core_N; j++) {
+			for (k = 0; k <= i - 1; k++) {
+				tempPermu[k] = CorePermu[j*order + k];
+			}
+			for (k = i + 1; k < order; k++) {
+				tempPermu[k] = CorePermu[j*order + k];
+			}
+			for (k = 0; k < Core_size[i]; k++) {
+				tempPermu[i] = k;
+				int cur = j + (k - CorePermu[j*order + i])*Mul[i];
+				tempCore[cur] += CoreTensor[j] * R(k, CorePermu[j*order + i]);
+			}
+		}
+		for (j = 0; j < Core_N; j++) {
+			CoreTensor[j] = tempCore[j];
+		}
+	}
+}
 
 //[Input] Input tensor X, initialized core tensor G, and initialized factor matrices A^{(n)} (n=1...N)
 //[Output] Updated core tensor G and factor matrices A^{(n)} (n=1...N)
@@ -416,6 +467,11 @@ void PTucker() {
 
 	avertime /= iter;
 
+    /*
+    Orthogonalize();
+    Reconstruction();
+    */
+
 	printf("\nMain iterations are ended.\tFinal Fit : %lf\tAverage iteration time : %lf\tTotal Elapsed time: %lf\n\n", Fit, avertime,omp_get_wtime()-Stime);
 
 }
@@ -445,8 +501,7 @@ void Print() {
 	pos = 0;
 	for (i = 0; i < Core_N; i++) {
 		for (j = 0; j < order; j++) {
-			if(j==order-1) fprintf(fcore, "%d", CorePermu[pos++]);
-			else fprintf(fcore, "%d\t", CorePermu[pos++]);
+		    fprintf(fcore, "%d\t", CorePermu[pos++]);
 		}
 		fprintf(fcore, "%e\n", CoreTensor[i]);
 	}
