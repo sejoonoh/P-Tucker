@@ -158,7 +158,7 @@ void Getting_Input() {
 	for (i = 0; i < Entries_N; i++) {
 		fgets(tmp, 10005, fin2);
 		len = strlen(tmp);
-		int k = 0, idx = 0, flag = 0;
+		int k = 0, idx = 0, flag = 0, flag2 = 0;
 		double mul = 0.1, val = 0;
 		for (j = 0; j < len; j++) {
 			if (tmp[j] == ' ' || tmp[j] == '\t') {
@@ -178,9 +178,16 @@ void Getting_Input() {
 				val += idx;
 				flag = 1;
 			}
+			else if (tmp[j] == '-') {
+				flag2 = 1;
+			}
 		}
 		if(flag==0) val = idx;
-		Entries[i] = val;
+        if(flag2 == 0){ 
+		    Entries[i] = val;
+        }else{
+            Entries[i] = -1 * val;
+        }
 		NormX += Entries[i] * Entries[i];
 	}
 	for (i = 0; i < order; i++) {
